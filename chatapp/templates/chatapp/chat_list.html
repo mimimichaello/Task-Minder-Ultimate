@@ -1,0 +1,30 @@
+﻿{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="margin-top: 170px; margin-left: 500px">
+    <div class="row">
+        <div class="col-md-5 border border-warning rounded-3 bg-dark text-light p-3">
+            <h2>Чат</h2>
+            <hr>
+            <a href="{% url "create_room" %}" class="btn btn-primary">Создать чат комнату</a>
+            <hr>
+            <h2>Список чатов</h2>
+            <hr>
+            <div class="mb-3">
+                <h5>Список чат-комнат</h5>
+                <ul>
+                    {% for room in rooms %}
+                        {% if request.user == room.creator or request.user in room.members.all %}
+                            <li>
+                                <a href="{% url "chat_room" room_id=room.id %}">{{ room.name }}</a>
+                                <a href="{% url "delete_room" room_id=room.id %}" class="btn btn-danger btn-sm ms-2"><img src="{% static 'img/delete.png' %}" width="10px" height="10px"></a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

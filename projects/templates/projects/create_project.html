@@ -1,0 +1,83 @@
+﻿{% extends "users/base.html" %}
+
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+<div class="container" style="margin-top: 50px;">
+    <div class="card">
+        <div class="card-header bg-success">
+            <h2 class="card-title">Создать проект</h2>
+            <button type="button" onclick="goBack()" class="btn btn-dark" style="margin-left: 1190px; margin-top:-40px">Назад</button>
+        </div>
+        <div class="card-body bg-dark text-light">
+            <form method="post" action="{% url 'create_project' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Название проекта</label>
+                    <input type="text" class="form-control " id="name" name="name">
+                    {% if form.errors.name %}
+                        <div class="alert alert-danger">{{ form.errors.name|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Описание</label>
+                    <textarea class="form-control " id="description" name="description"></textarea>
+                    {% if form.errors.description %}
+                    <div class="alert alert-danger">{{ form.errors.description|join:", " }}</div>
+                {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="responsible" class="form-label ">Ответственный</label>
+                    <select class="form-select" id="responsible" name="responsible">
+                        <option value="" {% if not form.responsible.value %}selected{% endif %}>Выберите ответственного</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if form.responsible.value == user.id %}selected{% endif %}>{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="start_date" class="form-label">Начало работы</label>
+                    <input type="text" class="form-control " id="start_date" name="start_date" readonly>
+                    {% if form.errors.start_date %}
+                    <div class="alert alert-danger">{{ form.errors.start_date|join:", " }}</div>
+                {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="end_date" class="form-label">Окончание работы</label>
+                    <input type="text" class="form-control" id="end_date" name="end_date" readonly>
+                    {% if form.errors.end_date %}
+                    <div class="alert alert-danger">{{ form.errors.end_date|join:", " }}</div>
+                {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-warning">Создать проект</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.6/dist/flatpickr.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.6/dist/flatpickr.min.css">
+
+<script>
+    flatpickr("#start_date", {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+    });
+
+    flatpickr("#end_date", {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+    });
+</script>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+{% endblock %}

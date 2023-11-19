@@ -1,0 +1,86 @@
+﻿{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+  {% if messages %}
+  <div class="alert alert-dismissible fade show position-fixed top-5 end-20" role="alert" id="autoHideAlert" style="margin-top: -15px; margin-right: -50px; height: 60px; border-radius: 5px; text-align: center; font-size: 20px; z-index: 1000; right: 10px;">
+      {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}" role="alert">
+              {{ message }}
+          </div>
+      {% endfor %}
+  </div>
+  <script>
+      setTimeout(function() {
+          var alertDiv = document.getElementById('autoHideAlert');
+          alertDiv.style.transition = 'opacity 1s';
+          alertDiv.style.opacity = 0;
+
+          setTimeout(function() {
+              alertDiv.style.display = 'none';
+          }, 1000);
+      }, 3000);
+  </script>
+  {% endif %}
+    <div class="row">
+      <div class="col-md-6 d-flex">
+        <div class="card flex-fill bg-dark">
+          <div class="card-header bg-warning">
+            <h5 class="card-title">Мои проекты</h5>
+            <a href="{% url "create_project" %}" class="btn btn-primary" style="margin-left: 560px; margin-top: -30px">Создать проект</a>
+          </div>
+          <div class="card-body  flex-column">
+            {% if projects %}
+            {% for project in projects %}
+            <ul class="list-group flex-fill p-2">
+              <li class="list-group-item">
+                <h4 class="card-subtitle mb-3 text-muted"><a href="{% url "single_project" project_id=project.id %}">{{ project.name }}</a> <span class="badge text-bg-danger">{{ project.task_count }}</span></h4>
+                <hr>
+                <span class="badge bg-primary">Начало: {{ project.start_date|date:"Y.m.d" }}</span>
+                <span class="badge bg-primary">Окончание: {{ project.end_date|date:"Y.m.d" }}</span>
+                <span class="badge bg-secondary">Ответственный: {{ project.responsible.username | slice:":20" }}</span>
+                <div class="ms-auto">
+                    <a class="" href="{% url "edit_project" project_id=project.id %}"><img src="{% static "img/edit.png" %}" width="20" height="20"></a>
+                    <a class="" href="{% url "edit_project" project_id=project.id %}"><img src="{% static "img/delete.png" %}" width="20" height="20"></a>
+                </div>
+              </li>
+            </ul>
+            {% endfor %}
+            {% else %}
+            <h5 class="text-light" style="text-align:center">У вас еще нет проектов</h5>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="card flex-fill bg-dark">
+          <div class="card-header bg-warning">
+            <h5 class="card-title mb-3">Проекты моих коллег</h5>
+          </div>
+          <div class="card-body flex-column">
+            {% if projects %}
+            {% for project in friend_projects %}
+            <ul class="list-group flex-fill p-2">
+              <li class="list-group-item">
+                <h4 class="card-subtitle mb-2 text-muted"><a href="{% url "single_project" project_id=project.id %}">{{ project.name }}</a> <span class="badge text-bg-danger">{{ project.task_count }}</span></h4>
+                <hr>
+                <span class="badge bg-primary">Начало: {{ project.start_date|date:"Y.m.d" }}</span>
+                <span class="badge bg-primary">Окончание: {{ project.end_date|date:"Y.m.d" }}</span>
+                <span class="badge bg-secondary">Ответственный: {{ project.responsible.username | slice:":20" }}</span>
+                <div class="ms-auto">
+                    <a class="" href="{% url "edit_project" project_id=project.id %}"><img src="{% static "img/edit.png" %}" width="20" height="20"></a>
+                    <a class="" href="{% url "delete_project" project_id=project.id %}"><img src="{% static "img/delete.png" %}" width="20" height="20"></a>
+                </div>
+              </li>
+            </ul>
+            {% endfor %}
+            {% else %}
+            <h5 class="text-light" style="text-align:center">Вы еще не добавили коллег или у ваших коллег еще нет проектов</h5>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,41 @@
+﻿{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col col-md-9 col-lg-7 col-xl-5">
+      <div class="card" style="border-radius: 15px;">
+        <div class="card-body p-4 bg-dark border border-3 border-danger" style=" border-radius: 15px;">
+          {% if found_user %}
+            <div class="d-flex text-light me-2">
+              <div class="flex-shrink-0 me-2 ms-2">
+                <img src="{% if found_user.image %}{{ found_user.image.url }}{% else %}{% static 'img/profile.png' %}{% endif %}"
+                  alt="Generic placeholder image" class="img-fluid"
+                  style="width: 180px; border-radius: 10px;">
+              </div>
+              <div class="flex-grow-1 ms-5">
+                <h5 class="mb-1 text-light">{{ found_user.first_name }} {{ found_user.last_name }}</h5>
+                <p class="mb-2 pb-1 text-light" style="color: #2b2a2a;">{{ found_user.username }}</p>
+                <p class="mb-2 pb-1 text-light" style="color: #2b2a2a;">{{ found_user.email }}</p>
+
+                    <form method="post" action="{% url 'add_friend' user_data.user_id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning flex-grow-3 mt-4">Подружиться</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <p>No user found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+
